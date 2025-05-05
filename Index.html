@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>E-transfer Payment Tracker</title>
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+  <style>
+    body {
+      background: #f4f6f8;
+      font-family: "Segoe UI", sans-serif;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .rotating-logo {
+      width: 200px;
+      height: 200px;
+     
+    }
+
+ /*   .rotating-logo {
+      width: 80px;
+      height: 80px;
+      animation: spin 5s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg);}
+      100% { transform: rotate(360deg);}
+    }*/
+
+    .tracker-container {
+      max-width: 700px;
+      margin: auto;
+      background: #fff;
+      padding: 2rem;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+      text-align: left;
+    }
+
+    .loader-text {
+      font-size: 1.25rem;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    .progress {
+      height: 25px;
+    }
+
+    .info-block {
+      background-color: #f1f3f5;
+      padding: 1rem;
+      border-radius: 10px;
+      margin-bottom: 1rem;
+    }
+
+    .info-title {
+      font-weight: bold;
+      color: #495057;
+    }
+
+    .amount {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #28a745;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Centered Rotating Logo -->
+  <img
+    src="https://brandlogos.net/wp-content/uploads/2013/12/commonwealth-bank-2013-vector-logo.png"
+    alt="Bank Logo"
+    class="rotating-logo"
+  />
+
+  <div class="tracker-container">
+    <h3 class="text-center mb-4">E-transfer Payment Tracker</h3>
+
+    <div class="loader-text text-primary">
+      🔄 Payment in transit from <strong>IDA ORGANIZATION FUNDING</strong> to <strong>Lyra Tirant James</strong>
+    </div>
+
+    <div class="progress mb-4">
+      <div id="progressBar" class="progress-bar progress-bar-striped progress-bar-animated bg-success" 
+           role="progressbar" 
+           style="width: 0%" 
+           aria-valuenow="0" 
+           aria-valuemin="0" 
+           aria-valuemax="100">
+      </div>
+    </div>
+
+    <div class="text-center mb-4">
+      <div class="amount">Amount Sent: $503,000</div>
+      <small class="text-muted">Transfer will complete by Wednesday, 07 May 2025</small>
+    </div>
+
+    <div class="info-block">
+      <div class="info-title">Sender</div>
+      <p>IDA ORGANIZATION FUNDING<br/>
+         Sending Date: 5th May, 2025
+      </p>
+    </div>
+
+    <div class="info-block">
+      <div class="info-title">Receiver</div>
+      <p>Name: Lyra Tirant James<br/>
+         BSB: 066516<br/>
+         Account: 10871566<br/>
+         Bank: Commonwealth Bank<br/>
+         Receiving Date: 07 May 2025
+      </p>
+    </div>
+  </div>
+
+  <script>
+    const progressBar = document.getElementById("progressBar");
+
+    // Set start and end times in AEST
+    const endTime = new Date('2025-05-07T17:00:00+10:00'); // Wednesday, 5PM
+    const startTime = new Date('2025-05-05T09:00:00+10:00'); // Monday, 9AM
+    const totalDuration = endTime - startTime;
+
+    function getNowAustraliaTime() {
+      return new Date(new Date().toLocaleString("en-US", { timeZone: "Australia/Sydney" }));
+    }
+
+    function updateProgress() {
+      const now = getNowAustraliaTime();
+      const elapsed = now - startTime;
+      const progressPercent = Math.min((elapsed / totalDuration) * 100, 100);
+
+      progressBar.style.width = progressPercent + "%";
+      progressBar.setAttribute("aria-valuenow", progressPercent.toFixed(2));
+
+      if (progressPercent >= 100) {
+        progressBar.classList.remove("progress-bar-animated");
+        progressBar.innerText = "✅ Transfer Complete";
+      } else {
+        progressBar.innerText = progressPercent.toFixed(1) + "%";
+      }
+
+      // Save time to resume on reload
+      localStorage.setItem("transferProgressTime", now.toISOString());
+    }
+
+    // Restore on reload
+    const savedTime = localStorage.getItem("transferProgressTime");
+    if (savedTime) {
+      updateProgress(); // on page load
+    }
+
+    // Update every 30 seconds
+    setInterval(updateProgress, 30000);
+    updateProgress(); // initial
+  </script>
+
+</body>
+</html>
