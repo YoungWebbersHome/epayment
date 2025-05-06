@@ -122,47 +122,18 @@
     </div>
   </div>
 
-  <script>
-    const progressBar = document.getElementById("progressBar");
 
-    // Set start and end times in AEST
-    const endTime = new Date('2025-05-07T17:00:00+10:00'); // Wednesday, 5PM
-    const startTime = new Date('2025-05-05T09:00:00+10:00'); // Monday, 9AM
-    const totalDuration = endTime - startTime;
+   <script>
+  const progressBar = document.getElementById("progressBar");
 
-    function getNowAustraliaTime() {
-      return new Date(new Date().toLocaleString("en-US", { timeZone: "Australia/Sydney" }));
-    }
+  // Set fixed progress to 85% and stop animation
+  const progressPercent = 85;
 
-    function updateProgress() {
-      const now = getNowAustraliaTime();
-      const elapsed = now - startTime;
-      const progressPercent = Math.min((elapsed / totalDuration) * 100, 100);
-
-      progressBar.style.width = progressPercent + "%";
-      progressBar.setAttribute("aria-valuenow", progressPercent.toFixed(2));
-
-      if (progressPercent >= 100) {
-        progressBar.classList.remove("progress-bar-animated");
-        progressBar.innerText = "✅ Transfer Complete";
-      } else {
-        progressBar.innerText = progressPercent.toFixed(1) + "%";
-      }
-
-      // Save time to resume on reload
-      localStorage.setItem("transferProgressTime", now.toISOString());
-    }
-
-    // Restore on reload
-    const savedTime = localStorage.getItem("transferProgressTime");
-    if (savedTime) {
-      updateProgress(); // on page load
-    }
-
-    // Update every 30 seconds
-    setInterval(updateProgress, 30000);
-    updateProgress(); // initial
-  </script>
+  progressBar.style.width = progressPercent + "%";
+  progressBar.setAttribute("aria-valuenow", progressPercent);
+  progressBar.innerText = progressPercent + "%";
+  progressBar.classList.remove("progress-bar-animated");
+</script>
 
 </body>
 </html>
