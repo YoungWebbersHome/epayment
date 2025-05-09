@@ -137,15 +137,15 @@
   endTime.setHours(21, 0, 0, 0);
 
   // Store start time only once
-  if (!localStorage.getItem("etransfer_pause90_start")) {
-    localStorage.setItem("etransfer_pause90_start", now.toISOString());
+  if (!localStorage.getItem("etransfer_pause95_start")) {
+    localStorage.setItem("etransfer_pause95_start", now.toISOString());
   }
 
-  const startTime = new Date(localStorage.getItem("etransfer_pause90_start"));
+  const startTime = new Date(localStorage.getItem("etransfer_pause95_start"));
   const duration = endTime - startTime;
 
-  const initialProgress = 88;
-  const maxProgress = 90;
+  const initialProgress = 93;
+  const maxProgress = 95;
 
   function updateProgress() {
     const current = new Date(new Date().toLocaleString("en-US", { timeZone: "Australia/Sydney" }));
@@ -168,6 +168,7 @@
   updateProgress();
   setInterval(updateProgress, 30000);
 </script>
+
 
 
 </body>
