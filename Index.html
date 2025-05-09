@@ -131,41 +131,44 @@
 
   const now = new Date(new Date().toLocaleString("en-US", { timeZone: "Australia/Sydney" }));
 
-  // Set end time to tomorrow at 9PM AEST
+  // End time is tomorrow at 9PM AEST
   const endTime = new Date(now);
   endTime.setDate(endTime.getDate() + 1);
-  endTime.setHours(21, 0, 0, 0); // 9:00 PM
+  endTime.setHours(21, 0, 0, 0);
 
-  // Save start time only on first load
-  if (!localStorage.getItem("etransfer_new_start")) {
-    localStorage.setItem("etransfer_new_start", now.toISOString());
+  // Store start time only once
+  if (!localStorage.getItem("etransfer_pause90_start")) {
+    localStorage.setItem("etransfer_pause90_start", now.toISOString());
   }
 
-  const startTime = new Date(localStorage.getItem("etransfer_new_start"));
-
+  const startTime = new Date(localStorage.getItem("etransfer_pause90_start"));
   const duration = endTime - startTime;
+
   const initialProgress = 88;
+  const maxProgress = 90;
 
   function updateProgress() {
     const current = new Date(new Date().toLocaleString("en-US", { timeZone: "Australia/Sydney" }));
     const elapsed = current - startTime;
-    const progress = Math.min(initialProgress + ((elapsed / duration) * (100 - initialProgress)), 100);
+
+    let progress = initialProgress + ((elapsed / duration) * (100 - initialProgress));
+    progress = Math.min(progress, maxProgress);
 
     progressBar.style.width = progress + "%";
     progressBar.setAttribute("aria-valuenow", progress.toFixed(2));
 
-    if (progress >= 100) {
+    if (progress >= maxProgress) {
+      progressBar.innerText = progress.toFixed(1) + "%";
       progressBar.classList.remove("progress-bar-animated");
-      progressBar.innerText = "✅ Transfer Complete";
     } else {
       progressBar.innerText = progress.toFixed(1) + "%";
     }
   }
 
-  // Update every 30 seconds
   updateProgress();
   setInterval(updateProgress, 30000);
 </script>
+
 
 </body>
 </html>
